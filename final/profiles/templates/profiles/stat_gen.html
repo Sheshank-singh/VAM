@@ -1,0 +1,149 @@
+<body>
+    {% extends 'base.html' %}
+    {% load static %}
+
+    {% block stylecontent %}
+    <style>
+        /* Custom styles to complement base.html styling */
+        body {
+            background-color: aliceblue;
+        }
+        h2 {
+            font-family: 'Slabo 27px';
+            border-bottom: 1px solid black;
+            font-weight: 900;
+        }
+        #page_name {
+            font-size: 25px;
+            font-weight: bold;
+            color: #3399ff;
+        }
+        
+        #details_box {
+            font-size: 23px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-top: 20px;
+        }
+        
+        #details_table {
+            font-size: 20px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        #edit_button {
+            border: none;
+            color: white;
+            background-color: #3399ff;
+            padding: 8px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        #edit_button a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Style for the form inputs */
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            background-color: #3399ff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #287bb5;
+        }
+    </style>
+    {% endblock %}
+
+    {% block bodycontent %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="page_name">
+                    Welcome {{ customer.customer_data.Name }}!
+                </div>
+                <div id="edit_details" style="float: right;">
+                    <button type="button" id="edit_button">
+                        <a href="{% url 'profiles:dashboard' %}">Home</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="details_box">
+                    <form name="stat_gen" action="get_stat_gen">
+                        <input type="hidden" name="account_action" id="account_action">
+                        <table id="details_table" cellpadding="5">
+                            {% if accounts %}
+                                <tr>
+                                    <td>Transaction Details:</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Trans_ID</td>
+                                    <td>Acc_No</td>
+                                    <td>Amount</td>
+                                    <td>Type</td>
+                                </tr>
+                                {% for accno, trans_obj_list in transaction.items %}
+                                    {% for trans_obj in trans_obj_list %}
+                                        <tr>
+                                            <td>{{ trans_obj.trans_id }}</td>
+                                            <td>{{ accno }}</td>
+                                            <td>{{ trans_obj.trans_details.Amount }}</td>
+                                            <td>{{ trans_obj.trans_details.Type }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="2">
+                                        <p>Which type do you want to see?</p>
+                                        <button onclick="set_account_action('all')">All</button>
+                                        <button onclick="set_account_action('withdraw')">Withdraw</button>
+                                        <button onclick="set_account_action('deposit')">Deposit</button>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">New Customer. No accounts yet.</td>
+                                </tr>
+                            {% endif %}
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function set_account_action(account_action_val) {
+            hidden_field = document.getElementById("account_action");
+            hidden_field.setAttribute("value", account_action_val);
+        }
+    </script>
+    {% endblock %}
+</body>

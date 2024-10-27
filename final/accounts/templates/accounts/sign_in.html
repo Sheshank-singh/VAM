@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block stylecontent %}
+    <style>
+        h2 {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block bodycontent %}
+    <h2 class="text-center">Sign In</h2>
+    <br>
+
+    <form action="/accounts/login/" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-custom btn-block">Sign In</button>
+    </form>
+{% endblock %}
+
+{% block scriptcontent %}
+    <script>
+        // Highlight the active link
+        $(".navbar .nav-link").removeClass("active");
+        $("#nav-login").addClass("active");
+    </script>
+{% endblock %}
